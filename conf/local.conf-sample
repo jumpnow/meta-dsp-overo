@@ -1,4 +1,4 @@
-# Local configuration for meta-duovero images
+# Local configuration for meta-dsp-overo images
 # Yocto Project 1.5.1 Poky distribution 10.0.1, [dora] branch
 # This is a sysvinit system
 
@@ -11,8 +11,8 @@ DISTRO_FEATURES_BACKFILL_CONSIDERED += "pulseaudio"
 
 PREFERRED_PROVIDER_jpeg = "libjpeg-turbo"
 
-BB_NUMBER_THREADS = "4"
-PARALLEL_MAKE = "-j 4"
+#BB_NUMBER_THREADS = "4"
+#PARALLEL_MAKE = "-j 4"
 
 # firmware loading works better with this version of udev
 PREFERRED_PROVIDER_udev = "systemd"
