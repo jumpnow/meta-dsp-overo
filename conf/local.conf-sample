@@ -20,6 +20,11 @@ PREFERRED_PROVIDER_udev = "systemd"
 # the default, but be explicit 
 VIRTUAL_RUNTIME_init_manager = "sysvinit"
 
+# the mesa bbappend in the meta-ti repo modifies an older version
+# of mesa then exists in the Yocto [dora] repo
+# not using, so ignore it
+BBMASK = "recipes-graphics/mesa"
+
 # new QA rules in Yocto are incompatible with many meta-ti recipes
 # these INSANE_SKIPs work around that
 INSANE_SKIP_ti-dsplink = "installed-vs-shipped"

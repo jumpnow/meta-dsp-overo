@@ -225,13 +225,17 @@ normally use were the following
 
 1. Inclusion of the forked [meta-ti][meta-ti] layer with some simple patches.
 
-2. A bunch of `INSANE_SKIP` declarations to get around new QA policies in Yocto
+2. Mask the `recipes-graphics/mesa` directory in `meta-ti`. It modifies a
+   recipe that does not exist in Yocto [dora]. Easy to fix if mesa is required.
+   I am not using mesa, so just ignore it.
+
+3. A bunch of `INSANE_SKIP` declarations to get around new QA policies in Yocto
    that the `meta-ti` recipes are not following. I set these in `local.conf`
    rather then going to each recipe. This is new for `[dora]`.
 
-3. A `TOOLCHAIN_PATH` setting for TI tools in `meta-dsp-overo/conf/machine/overo.conf`.
+4. A `TOOLCHAIN_PATH` setting for TI tools in `meta-dsp-overo/conf/machine/overo.conf`.
  
-4. The kernel recipes in `meta-overo/recipes/kernel/linux/` have this line 
+5. The kernel recipes in `meta-overo/recipes/kernel/linux/` have this line 
    
     require recipes-kernel/linux/linux-yocto.inc   
 
