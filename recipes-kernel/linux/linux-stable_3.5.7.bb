@@ -46,6 +46,7 @@ SRC_URI = " \
     file://0033-ARM-7668-1-fix-memset-related-crashes-caused-by-rece.patch \
     file://0034-ARM-7670-1-fix-the-memset-fix.patch \
     file://0035-OMAP2-3-clock-fix-sprz319-erratum-2.1.patch \
+    file://0036-ispvideo-add-missing-v4l2-ioctls.patch \
     file://defconfig \
 "
 
