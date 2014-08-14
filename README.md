@@ -46,6 +46,10 @@ Yocto project.
 
 The modified instructions are
 
+Checkout the *meta-ti* layer in the `~/poky-daisy` directory.
+
+    scott@hex:~/poky-daisy$ git clone -b daisy git://git.yoctoproject.org/meta-ti 
+
 Create a subdirectory for the `meta-dsp-overo` repository before cloning
 
     scott@hex:~/poky-daisy$ git clone -b daisy git://git.yoctoproject.org/meta-ti 
