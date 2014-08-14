@@ -1,19 +1,19 @@
 This layer depends on:
 
         URI: git://git.yoctoproject.org/poky.git
-        branch: dora
+        branch: daisy
         revision: HEAD
-        commit: 845df01 
+        commit: 87671f7 
 
         URI: git://git.openembedded.org/meta-openembedded
-        branch: dora
+        branch: daisy
         revision: HEAD
-        commit: ee17367 
+        commit: 9ee63ed 
 
-        URI: git://github.com/scottellis/meta-ti
-        branch: dora
+        URI: git://git.yoctoproject.org/meta-ti
+        branch: daisy
         revision: HEAD
-        commit: 87a4bfa
+        commit: a817ad5
 
         meta-dsp-overo layer maintainer: Scott Ellis <scott@jumpnowtek.com>
 
@@ -39,25 +39,24 @@ this repo.
 
 Whenever `meta-overo` is referenced in that *howto*, use `meta-dsp-overo`.
 
-There is also another dependency, a patched version of the `meta-ti` 
-repository found at `github.com/jumpnow/meta-ti`
+Also, wherever the `[dora]` branch is referenced, substitute `[daisy]'.
+
+There is also another dependency, the *meta-ti* layer hosted by the
+Yocto project.
 
 The modified instructions are
 
 Create a subdirectory for the `meta-dsp-overo` repository before cloning
 
-    scott@hex:~/poky-dora$ cd ..
+    scott@hex:~/poky-daisy$ git clone -b daisy git://git.yoctoproject.org/meta-ti 
+
+    scott@hex:~/poky-daisy$ cd ..
     scott@hex:~$ mkdir dsp-overo
     scott@hex:~$ cd dsp-overo
 
-    scott@hex:~/dsp-overo$ git clone git://github.com/jumpnow/meta-ti
-    scott@hex:~/dsp-overo$ cd meta-ti
-    scott@hex:~/dsp-overo/meta-ti$ git checkout -b dora origin/dora
-    scott@hex:~/dsp-overo/meta-ti$ cd ..
-
     scott@hex:~/dsp-overo$ git clone git://github.com/jumpnow/meta-overo
     scott@hex:~/dsp-overo$ cd meta-dsp-overo
-    scott@hex:~/dsp-overo/meta-dsp-overo$ git checkout -b dora origin/dora
+    scott@hex:~/dsp-overo/meta-dsp-overo$ git checkout -b daisy origin/daisy
     scott@hex:~/dsp-overo/meta-dsp-overo$ cd ..
 
 

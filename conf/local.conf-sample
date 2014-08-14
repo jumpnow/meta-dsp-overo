@@ -1,5 +1,5 @@
-# Local configuration for meta-duovero images
-# Yocto Project 1.5.2 Poky distribution 10.0.2, [dora] branch
+# Local configuration for meta-dsp-overo images
+# Yocto Project 1.6.1 Poky distribution 11.0.1, [daisy] branch
 # This is a sysvinit system
 
 LICENSE_FLAGS_WHITELIST = "commercial"
@@ -11,10 +11,9 @@ DISTRO_FEATURES_BACKFILL_CONSIDERED += "pulseaudio"
 
 PREFERRED_PROVIDER_jpeg = "libjpeg-turbo"
 
-BB_NUMBER_THREADS = "4"
-PARALLEL_MAKE = "-j 4"
+BB_NUMBER_THREADS = "2"
+PARALLEL_MAKE = "-j2"
 
-# firmware loading works better with this version of udev
 PREFERRED_PROVIDER_udev = "systemd"
 
 # the default, but be explicit 
@@ -23,39 +22,15 @@ VIRTUAL_RUNTIME_init_manager = "sysvinit"
 # the mesa bbappend in the meta-ti repo modifies an older version
 # of mesa then exists in the Yocto [dora] repo
 # not using, so ignore it
-BBMASK = "recipes-graphics/mesa"
-
-# new QA rules in Yocto are incompatible with many meta-ti recipes
-# these INSANE_SKIPs work around that
-INSANE_SKIP_ti-dsplink = "installed-vs-shipped"
-INSANE_SKIP_ti-local-power-manager = "installed-vs-shipped"
-INSANE_SKIP_ti-linuxutils = "installed-vs-shipped"
-INSANE_SKIP_ti-biosutils = "installed-vs-shipped"
-INSANE_SKIP_ti-dspbios = "installed-vs-shipped"
-INSANE_SKIP_ti-cgt6x = "installed-vs-shipped"
-INSANE_SKIP_ti-xdctools = "installed-vs-shipped"
-INSANE_SKIP_ti-edma3lld = "installed-vs-shipped"
-INSANE_SKIP_ti-framework-components = "installed-vs-shipped"
-INSANE_SKIP_ti-xdais = "installed-vs-shipped"
-INSANE_SKIP_ti-codec-engine = "installed-vs-shipped"
-INSANE_SKIP_ti-codecs-omap3530 = "installed-vs-shipped"
-INSANE_SKIP_ti-dmai = "installed-vs-shipped"
-
+# BBMASK = "recipes-graphics/mesa"
 
 MACHINE = "overo"
 
-# DL_DIR = "/oe-sources"
-
-# SSTATE_DIR = "/oe7/sstate-cache"
-
-# TMPDIR = "/oe7/tmp-poky-dora-build"
+DL_DIR = "/oe-sources"
 
 DISTRO = "poky"
 
 PACKAGE_CLASSES = "package_ipk"
-
-# i686 or x86_64
-# SDKMACHINE = "x86_64"
 
 EXTRA_IMAGE_FEATURES = "debug-tweaks"
 
