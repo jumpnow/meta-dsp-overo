@@ -39,7 +39,7 @@ this repo.
 
 Whenever `meta-overo` is referenced in that *howto*, use `meta-dsp-overo`.
 
-Also, wherever the `[dora]` branch is referenced, substitute `[daisy]'.
+Also, wherever the `[dora]` branch is referenced, substitute `[daisy]`.
 
 There is also another dependency, the *meta-ti* layer hosted by the
 Yocto project.
@@ -51,8 +51,6 @@ Checkout the *meta-ti* layer in the `~/poky-daisy` directory.
     scott@hex:~/poky-daisy$ git clone -b daisy git://git.yoctoproject.org/meta-ti 
 
 Create a subdirectory for the `meta-dsp-overo` repository before cloning
-
-    scott@hex:~/poky-daisy$ git clone -b daisy git://git.yoctoproject.org/meta-ti 
 
     scott@hex:~/poky-daisy$ cd ..
     scott@hex:~$ mkdir dsp-overo
