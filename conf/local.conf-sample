@@ -7,7 +7,7 @@ LICENSE_FLAGS_WHITELIST = "commercial"
 # Important to override DISTRO_FEATURES or by default x11 and all its dependencies
 # will get built whether or not you use it in an image.
 DISTRO_FEATURES = "ext2 systemd usbhost ${DISTRO_FEATURES_LIBC}"
-DISTRO_FEATURES_BACKFILL_CONSIDERED += "pulseaudio"
+DISTRO_FEATURES_BACKFILL_CONSIDERED += "pulseaudio opengl"
 
 PREFERRED_PROVIDER_jpeg = "libjpeg-turbo"
 
@@ -19,14 +19,9 @@ PREFERRED_PROVIDER_udev = "systemd"
 # the default, but be explicit 
 VIRTUAL_RUNTIME_init_manager = "sysvinit"
 
-# the mesa bbappend in the meta-ti repo modifies an older version
-# of mesa then exists in the Yocto [dora] repo
-# not using, so ignore it
-# BBMASK = "recipes-graphics/mesa"
-
 MACHINE = "overo"
 
-DL_DIR = "/oe-sources"
+# DL_DIR = "/oe-sources"
 
 DISTRO = "poky"
 
