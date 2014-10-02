@@ -114,7 +114,7 @@ environment built into the new version of u-boot.
 
 Set aside some memory for the DSP
 
-    Overo # setenv optargs mem=96M@0x80000000 mem=384@0x88000000
+    Overo # setenv optargs mem=96M@0x80000000 mem=384M@0x88000000
     Overo # saveenv
 
 And finish booting
