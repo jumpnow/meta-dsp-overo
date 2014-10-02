@@ -190,7 +190,7 @@ Then on the Gumstix, run a pipeline like this
       ! rtph264pay pt=96 \
       ! udpsink host=192.168.10.3 port=4000
 
-Where `192.168.10.3` is the workstation IP address. The port is arbitrary.
+Where `192.168.10.3` is the workstation IP address. The ports have to match.
 
 I have the gstreamer pipelines in a script
 
@@ -265,19 +265,11 @@ Gumstix Yocto builds. It's not tested very well.
 The issues to get this repo working starting from the `meta-overo` repo I 
 normally use were the following
 
-1. Inclusion of the forked [meta-ti][meta-ti] layer with some simple patches.
+1. Inclusion of the *meta-ti* layer, the [daisy] branch.
 
-2. Mask the `recipes-graphics/mesa` directory in `meta-ti`. It modifies a
-   recipe that does not exist in Yocto [dora]. Easy to fix if mesa is required.
-   I am not using mesa, so just ignore it.
-
-3. A bunch of `INSANE_SKIP` declarations to get around new QA policies in Yocto
-   that the `meta-ti` recipes are not following. I set these in `local.conf`
-   rather then going to each recipe. This is new for `[dora]`.
-
-4. A `TOOLCHAIN_PATH` setting for TI tools in `meta-dsp-overo/conf/machine/overo.conf`.
+2. A `TOOLCHAIN_PATH` setting for TI tools in `meta-dsp-overo/conf/machine/overo.conf`.
  
-5. The kernel recipes in `meta-overo/recipes/kernel/linux/` have this line 
+3. The kernel recipes in `meta-overo/recipes/kernel/linux/` have this line
    
     require recipes-kernel/linux/linux-yocto.inc   
 
@@ -301,6 +293,5 @@ that first shutdown. I have not investigated.
    
 [overo-yocto-build]: http://www.jumpnowtek.com/gumstix/overo/Overo-Systems-with-Yocto.html
 [overo-ffmpegcolorspace]: http://www.jumpnowtek.com/gumstix/overo/Overo-ffmpegcolorspace-optimization.html
-[meta-ti]: https://github.com/jumpnow/meta-ti
 [ti-download]: http://software-dl.ti.com/codegen/non-esd/downloads/download.htm
 [caspa-v4l-patch]: https://github.com/jumpnow/meta-dsp-overo/commit/16e9855760bffc66c48f18e3174ed3704b688e83
