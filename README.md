@@ -3,17 +3,17 @@ This layer depends on:
         URI: git://git.yoctoproject.org/poky.git
         branch: daisy
         revision: HEAD
-        commit: b2f045c 
+        commit: a4d8015
 
         URI: git://git.openembedded.org/meta-openembedded
         branch: daisy
         revision: HEAD
-        commit: 9ee63ed 
+        commit: 66c2cf40
 
         URI: git://git.yoctoproject.org/meta-ti
         branch: daisy
         revision: HEAD
-        commit: a817ad5
+        commit: df04699
 
         meta-dsp-overo layer maintainer: Scott Ellis <scott@jumpnowtek.com>
 
