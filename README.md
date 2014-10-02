@@ -107,7 +107,7 @@ parameters in u-boot for the DSP.
 
 Stop u-boot and first clear the existing environment stored in NAND
 
-    Overo # nand erase 240000 2000
+    Overo # nand erase 240000 20000
 
 Power off, power on an stop again in u-boot. Now you are using the default
 environment built into the new version of u-boot.
