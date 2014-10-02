@@ -1,19 +1,19 @@
 This layer depends on:
 
         URI: git://git.yoctoproject.org/poky.git
-        branch: dora
+        branch: daisy
         revision: HEAD
-        commit: 0a6f0db 
+        commit: a4d8015
 
         URI: git://git.openembedded.org/meta-openembedded
-        branch: dora
+        branch: daisy
         revision: HEAD
-        commit: ee17367 
+        commit: 66c2cf40
 
-        URI: git://github.com/scottellis/meta-ti
-        branch: dora
+        URI: git://git.yoctoproject.org/meta-ti
+        branch: daisy
         revision: HEAD
-        commit: 87a4bfa
+        commit: df04699
 
         meta-dsp-overo layer maintainer: Scott Ellis <scott@jumpnowtek.com>
 
@@ -22,6 +22,16 @@ Instructions for using this layer can be found at [jumpnowtek.com][overo-yocto-b
 
 The changes are in this section and below of that *howto*.
 
+### NOTE: 32-bit vs 64-bit build workstation
+
+The TI tools require 32-bit libraries on the build machine.
+With previous versions of Ubuntu, 32-bit compat libraries were
+available for 64-bit systems. As of Ubuntu 14.04 this is no
+longer the case. It's not impossible to install 32-bit compat
+libaries on a 64-bit Ubuntu system, but I'm not going to document
+that here. It's easiest to just use a 32-bit system. A VM will
+work. 
+
 #### Clone the meta-overo repository
 
 Instead of creating a `~/overo` directory, I'm using `~/dsp-overo` for
@@ -29,31 +39,58 @@ this repo.
 
 Whenever `meta-overo` is referenced in that *howto*, use `meta-dsp-overo`.
 
-There is also another dependency, a patched version of the `meta-ti` 
-repository found at `github.com/jumpnow/meta-ti`
+Also, wherever the `[dora]` branch is referenced, substitute `[daisy]`.
+
+There is also another dependency, the *meta-ti* layer hosted by the
+Yocto project.
 
 The modified instructions are
 
+Checkout the *meta-ti* layer in the `~/poky-daisy` directory.
+
+    scott@hex:~/poky-daisy$ git clone -b daisy git://git.yoctoproject.org/meta-ti 
+
 Create a subdirectory for the `meta-dsp-overo` repository before cloning
 
-    scott@hex:~/poky-dora$ cd ..
+    scott@hex:~/poky-daisy$ cd ..
     scott@hex:~$ mkdir dsp-overo
     scott@hex:~$ cd dsp-overo
 
-    scott@hex:~/dsp-overo$ git clone git://github.com/jumpnow/meta-ti
-    scott@hex:~/dsp-overo$ cd meta-ti
-    scott@hex:~/dsp-overo/meta-ti$ git checkout -b dora origin/dora
-    scott@hex:~/dsp-overo/meta-ti$ cd ..
-
     scott@hex:~/dsp-overo$ git clone git://github.com/jumpnow/meta-overo
     scott@hex:~/dsp-overo$ cd meta-dsp-overo
-    scott@hex:~/dsp-overo/meta-dsp-overo$ git checkout -b dora origin/dora
+    scott@hex:~/dsp-overo/meta-dsp-overo$ git checkout -b daisy origin/daisy
     scott@hex:~/dsp-overo/meta-dsp-overo$ cd ..
 
 
 When it comes time to build an image, build the `dsp-image` found here 
 
     meta-dsp-overo/images/dsp-image.bb
+
+#### C6000 compiler
+
+When you go to build the `dsp-image` eventually you'll get an error like
+this
+
+    ERROR: Function failed: Fetcher failure for URL: 'http://install.source.dir.local/ti_cgt_c6000_7.2.7_setup_linux_x86.bin;name=cgt6xbin'. Unable to fetch URL from any source
+
+What you have to do is manually download the C6000 DSP compiler from
+the [TI downloads page][ti-download] after some registration. 
+
+You want the Linux version of the `7.2.7` compiler.
+
+Place it in your `DL_DIR` and add a *done* file.
+
+    scott@dual:~$ ls -l /oe-sources/ti_cgt*
+    -rw-rw-r-- 1 scott scott 203234908 Jun  5 20:49 /oe-sources/ti_cgt_c6000_7.2.7_setup_linux_x86.bin
+
+    scott@dual:~$ touch /oe-sources/ti_cgt_c6000_7.2.7_setup_linux_x86.bin.done
+
+    scott@dual:~$ ls -l /oe-sources/ti_cgt*
+    -rw-rw-r-- 1 scott scott 203234908 Jun  5 20:49 /oe-sources/ti_cgt_c6000_7.2.7_setup_linux_x86.bin
+    -rw-rw-r-- 1 scott scott         0 Jul  4 16:28 /oe-sources/ti_cgt_c6000_7.2.7_setup_linux_x86.bin.done
+
+
+#### Copying the binaries to an SD card
 
 Using the copy scripts in `meta-dsp-overo/scripts` and explained in the 
 [howto] [overo-yocto-build], copy the image to the SD card
@@ -63,6 +100,9 @@ Using the copy scripts in `meta-dsp-overo/scripts` and explained in the
     scott@hex:~/dsp-overo/meta-dsp-overo$ ./copy_rootfs.sh sdd dsp dsp-overo
     ...
 
+
+#### Initialization
+
 When you boot the image the first time, you'll want to set some kernel 
 parameters in u-boot for the DSP.
 
@@ -71,11 +111,11 @@ Stop u-boot and first clear the existing environment stored in NAND
     Overo # nand erase 240000 2000
 
 Power off, power on an stop again in u-boot. Now you are using the default
-environment built into u-boot.
+environment built into the new version of u-boot.
 
 Set aside some memory for the DSP
 
-    Overo # setenv optargs mem=96M@0x80000000 mem=256@0x88000000
+    Overo # setenv optargs mem=96M@0x80000000 mem=384M@0x88000000
     Overo # saveenv
 
 And finish booting
@@ -84,32 +124,34 @@ And finish booting
 
 At the end of the kernel boot you should see the DSP modules getting loaded
 
-    ...
+    ... 
     Loading kernel modules for gstreamer-ti...
-    Running /usr/share/ti/gst/omap3530/loadmodules.sh[    6.719726] CMEMK module: built on May 18 2014 at 07:58:17
-    [    6.725860]   Reference Linux version 3.5.7
-    [    6.730407]   File /oe19/dsp/tmp-poky-dora-build/work/overo-poky-linux-gnueabi/ti-linuxutils/1_2_26_01_02-r0e/linuxutils_2_26_01_02/packages/ti/sdo/linuxutils/cmem/src/module/cmemk.c
-    [    6.752044] CMEM Range Overlaps Kernel Physical - allowing overlap
-    [    6.758880] CMEM phys_start (0x86300000) overlaps kernel (0x80000000 -> 0x95300000)
-    [    6.767883] allocated heap buffer 0xd9000000 of size 0x53d000
-    [    6.774200] cmemk initialized
-    [    6.857421] DSPLINK Module (1.65.00.03) created on Date: May 18 2014 Time: 07:58:48
-    [    6.901702] SDMAK module: built on May 18 2014 at 07:58:22
-    [    6.907470]   Reference Linux version 3.5.7
-    [    6.912261]   File /oe19/dsp/tmp-poky-dora-build/work/overo-poky-linux-gnueabi/ti-linuxutils/1_2_26_01_02-r0e/linuxutils_2_26_01_02/packages/ti/sdo/linuxutils/sdma/src/module/sdmak.c
+    Running /usr/share/ti/gst/omap3530/loadmodules.sh[    6.773712] CMEMK module: built on Jul  4 2014 at 16:44:11
+    [    6.779815]   Reference Linux version 3.5.7
+    [    6.784393]   File /home/scott/dsp-overo/build/tmp/work/overo-poky-linux-gnueabi/ti-linuxutils/1_2_26_01_02-r0e/linuxutils_2_26_01_02/packages/ti/sdo/linuxutils/cmem/src/module/cmemk.c
+    [    6.805084] CMEM Range Overlaps Kernel Physical - allowing overlap
+    [    6.811889] CMEM phys_start (0x86300000) overlaps kernel (0x80000000 -> 0x9d300000)
+    [    6.820922] allocated heap buffer 0xe1000000 of size 0x53d000
+    [    6.827270] cmemk initialized
+    [    6.911315] DSPLINK Module (1.65.00.03) created on Date: Jul  4 2014 Time: 16:43:01
+    [    6.956848] SDMAK module: built on Jul  4 2014 at 16:44:16
+    [    6.962585]   Reference Linux version 3.5.7
+    [    6.967407]   File /home/scott/dsp-overo/build/tmp/work/overo-poky-linux-gnueabi/ti-linuxutils/1_2_26_01_02-r0e/linuxutils_2_26_01_02/packages/ti/sdo/linuxutils/sdma/src/module/sdmak.c
       done
 
-    Poky (Yocto Project Reference Distro) 1.5.1 dsp-overo /dev/ttyO2
+    Poky (Yocto Project Reference Distro) 1.5.2 dsp-overo /dev/ttyO2
 
     dsp-overo login:
 
 
-The `mt9v032` driver for the *Caspa* camera is broken for use with *gstreamer*
-because of some missing *V4L ioctls*. 
+The `mt9v032` driver for the *Caspa* camera was previously broken for use with
+*gstreamer* because of some missing *V4L ioctls*. I recently added this 
+[v4l patch][caspa-v4l-patch] taken from a posting on the Gumstix mailing list.
+It may actually work now. I have not dug up a *Caspa* camera to test. 
 
-You can still test out the DSP *h.264* encoder using a USB webcam.
+I have tested the DSP *h.264* encoder using USB webcams.
 
-Plug a webcam into the USB Host port. I'm using a *Logitech C920*.
+Plug a webcam into the USB Host port. I used a *Logitech C920*.
 
     dsp-overo login: root
     root@dsp-overo:~# [  234.330871] usb 1-2: new high-speed USB device number 2 using ehci-omap
@@ -204,8 +246,8 @@ At 10 fps, the load gets a little better
       ...
 
 Still quite a load, but the images from the *Logitech C920* are considerably 
-nicer then the *Caspa mt9v032* board would provide even if it worked. Any UVC
-webcam that can output YUV should work the same way. Most webcams provide YUV.
+nicer then the *Caspa mt9v032* board. Any UVC webcam that can output YUV 
+should work the same way. Most webcams provide YUV.
 
 The webcam shows up as `/dev/video7` because `/dev/video0` through `/dev/video6`
 are taken by the `mt9v0321` driver and the associated `ISP` pipelines.
@@ -260,3 +302,5 @@ that first shutdown. I have not investigated.
 [overo-yocto-build]: http://www.jumpnowtek.com/gumstix/overo/Overo-Systems-with-Yocto.html
 [overo-ffmpegcolorspace]: http://www.jumpnowtek.com/gumstix/overo/Overo-ffmpegcolorspace-optimization.html
 [meta-ti]: https://github.com/jumpnow/meta-ti
+[ti-download]: http://software-dl.ti.com/codegen/non-esd/downloads/download.htm
+[caspa-v4l-patch]: https://github.com/jumpnow/meta-dsp-overo/commit/16e9855760bffc66c48f18e3174ed3704b688e83
